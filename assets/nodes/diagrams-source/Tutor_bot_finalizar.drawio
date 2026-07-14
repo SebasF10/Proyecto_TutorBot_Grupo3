@@ -1,0 +1,31 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="TpISCvzbGS56iZ9h3wRU">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="EsWNzK_4OKdQGYRH-_H1-3" edge="1" parent="1" source="EsWNzK_4OKdQGYRH-_H1-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="EsWNzK_4OKdQGYRH-_H1-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="EsWNzK_4OKdQGYRH-_H1-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Schedule Trigger&lt;/b&gt;&lt;div&gt;&lt;p data-start=&quot;366&quot; data-end=&quot;435&quot; class=&quot;PDq2pG_selectionAnchorContainer&quot;&gt;Este nodo inicia automáticamente el workflow en horarios programados.&lt;/p&gt;&lt;p data-start=&quot;437&quot; data-end=&quot;516&quot;&gt;A diferencia del bot de Telegram, aquí no espera que un usuario envíe mensajes.&lt;/p&gt;&lt;p data-start=&quot;518&quot; data-end=&quot;545&quot;&gt;El sistema se ejecuta solo.&lt;/p&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="220" x="380" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="EsWNzK_4OKdQGYRH-_H1-5" edge="1" parent="1" source="EsWNzK_4OKdQGYRH-_H1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="EsWNzK_4OKdQGYRH-_H1-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="EsWNzK_4OKdQGYRH-_H1-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Leer Todas las Tutorías&lt;/b&gt;&lt;div&gt;&lt;p data-start=&quot;1104&quot; data-end=&quot;1176&quot; class=&quot;PDq2pG_selectionAnchorContainer&quot;&gt;Consulta la hoja donde están registradas todas las tutorías del sistema.&lt;/p&gt;&lt;p data-start=&quot;1178&quot; data-end=&quot;1216&quot;&gt;Lee cada fila para analizar su estado&lt;/p&gt;&lt;p data-start=&quot;1178&quot; data-end=&quot;1216&quot;&gt;Porque el sistema necesita revisar todas las reservas existentes antes de decidir cuáles ya vencieron&lt;/p&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="170" width="215" x="382.5" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="EsWNzK_4OKdQGYRH-_H1-7" edge="1" parent="1" source="EsWNzK_4OKdQGYRH-_H1-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="EsWNzK_4OKdQGYRH-_H1-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="EsWNzK_4OKdQGYRH-_H1-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Detectar Tutorías Vencidas&lt;/b&gt;&lt;div&gt;&lt;p data-start=&quot;1797&quot; data-end=&quot;1895&quot; class=&quot;PDq2pG_selectionAnchorContainer&quot;&gt;Analiza todas las tutorías obtenidas desde Google Sheets y compara sus fechas con la fecha actual.&lt;/p&gt;&lt;p data-start=&quot;1897&quot; data-end=&quot;1995&quot;&gt;Su objetivo es identificar cuáles ya pasaron y todavía siguen marcadas como activas o programadas&lt;/p&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="140" width="220" x="380" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="EsWNzK_4OKdQGYRH-_H1-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;&amp;nbsp;Update Row in Sheet&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Actualiza las filas correspondientes a las tutorías vencidas encontradas en el nodo anterior&lt;/div&gt;&lt;div&gt;Las tutorías que ya ocurrieron quedan marcadas como finalizadas o vencidas.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="220" x="380" y="610" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

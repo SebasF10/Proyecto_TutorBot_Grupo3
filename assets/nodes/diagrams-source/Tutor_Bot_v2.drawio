@@ -1,0 +1,420 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Página-1" id="I9-GapEXiKEMs6YyoGsS">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ZpKrJXhJShN57m73RQe9-3" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Telegram Trigger&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- Detecta cuando llega un mensaje por telegram y inicializa el flujo de n8n&lt;/div&gt;&lt;div&gt;- Almacena datos iniciales y los pasa&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="200" x="320" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-5" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ZpKrJXhJShN57m73RQe9-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Normalizar Mensaje&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- Toma la información que da el nodo anterior y crea un formato mucho más sencillo.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="330" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-8" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Buscar Sesión Activa&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- lee los datos normalizados de la persona que esta hablando con el bot para verificar si ya habian tenido un proceso anteriormente o es la primera vez que hablan&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="220" x="310" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-13" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-14" connectable="0" parent="ZpKrJXhJShN57m73RQe9-13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="False" vertex="1">
+          <mxGeometry relative="1" x="-0.482" y="3" as="geometry">
+            <mxPoint x="44" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-29" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-30" connectable="0" parent="ZpKrJXhJShN57m73RQe9-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="True" vertex="1">
+          <mxGeometry relative="1" x="-0.3835" y="-3" as="geometry">
+            <mxPoint x="-32" y="18" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-6" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Existe Sesion" vertex="1">
+          <mxGeometry height="90" width="120" x="360" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-9" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="390" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Compara el resultado del nodo anterior y revisa si tenían datos anteriores del usuario o es una nueva conversasion" vertex="1">
+          <mxGeometry height="90" width="150" x="150" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-17" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ZpKrJXhJShN57m73RQe9-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-18" connectable="0" parent="ZpKrJXhJShN57m73RQe9-17" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="False" vertex="1">
+          <mxGeometry relative="1" x="-0.4728" y="2" as="geometry">
+            <mxPoint x="9" y="-13" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-21" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-22" connectable="0" parent="ZpKrJXhJShN57m73RQe9-21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="True" vertex="1">
+          <mxGeometry relative="1" x="-0.3261" y="-1" as="geometry">
+            <mxPoint x="16" y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-10" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Es Comando Solicitar" vertex="1">
+          <mxGeometry height="90" width="110" x="710" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-12" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Evita que cualquier mensaje haga que el sistema empiece una reserva, Hace que solo unos comandos lo inicien" vertex="1">
+          <mxGeometry height="95" width="133" x="827" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Ignorar&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Si el usuario no escribe el comando correcto manda un mensaje de error&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="120" x="920" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-24" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-20" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Extraer Materias Únicas&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Extrae las materias que se encuentran en el Exel y se las pasa al siguiente nodo&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="150" x="520" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-26" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Menú Materias&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Recibe los datos del nodo anterior y los envia en modo de mesaje bien diseñado&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="150" x="520" y="900.06" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-25" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Guardar Sesión - Esperando Materia&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Se guardar la materia y modifica las celdas de la BD&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="170" x="510" y="1020.06" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-37" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-35" value="Opcion 0">
+          <mxGeometry relative="1" x="-0.0361" y="-20" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-38" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-33" value="Opcion 1">
+          <mxGeometry relative="1" x="0.2504" y="-16" as="geometry">
+            <mxPoint x="11" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-39" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.276;exitY=0.817;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" target="ZpKrJXhJShN57m73RQe9-36" value="Opcion 2">
+          <mxGeometry relative="1" x="-0.1616" y="-10" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="56" y="710" />
+              <mxPoint x="-445" y="710" />
+            </Array>
+            <mxPoint x="-437.5" y="669.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-41" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="ZpKrJXhJShN57m73RQe9-40" value="Opción 3">
+          <mxGeometry relative="1" x="-0.1787" y="20" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="-310" y="520" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-28" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Switch - Estructura según Pantalla" vertex="1">
+          <mxGeometry height="120" width="130" x="20" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-32" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-28">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-50" y="620" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-31" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Valida en que paso se quedó anteriormente el usuario y lo envía para que siga en donde se quedo" vertex="1">
+          <mxGeometry height="95" width="160" x="-130" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-43" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-42">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-33" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Validar Opción Materia&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Nodo tipo código que valida la opción de la materia que elegimos y revisa si esa opción existe en la BD&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="190" x="-40" y="800.06" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-54" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ZpKrJXhJShN57m73RQe9-20">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="355" y="860" />
+              <mxPoint x="480" y="860" />
+              <mxPoint x="480" y="820" />
+            </Array>
+            <mxPoint x="390" y="879.9999999999998" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Leer Tutores Activos&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span data-start=&quot;315&quot; data-end=&quot;383&quot; style=&quot;&quot;&gt;lee todos los tutores que se encuentran registrados como activos&lt;/span&gt;. y los almacenan en un Json para que otro nodo los lea&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="170" x="280" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-57" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-56">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-36" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Validar Fecha&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;recibe la fecha que escribió el estudiante y verifica que tenga el formato correcto y que pueda utilizarse para buscar disponibilidad. y guardar el resultado&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="190" x="-540" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-2" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="bDbjJUy5CF4Ujhr01NYg-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Interpretar Respuesta&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Este nodo recibe el mensaje que acaba de escribir el estudiante después de que el bot le mostró la lista de tutores y lo interpreta para que el switch pueda funcionar&lt;/div&gt;" vertex="1">
+          <mxGeometry height="110" width="190" x="-1200" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-47" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ZpKrJXhJShN57m73RQe9-46">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-48" connectable="0" parent="ZpKrJXhJShN57m73RQe9-47" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="False" vertex="1">
+          <mxGeometry relative="1" x="-0.359" y="-3" as="geometry">
+            <mxPoint x="2" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-50" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-49">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-51" connectable="0" parent="ZpKrJXhJShN57m73RQe9-50" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="True" vertex="1">
+          <mxGeometry relative="1" x="-0.421" y="1" as="geometry">
+            <mxPoint x="14" y="19" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-42" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Opción Válida" vertex="1">
+          <mxGeometry height="80" width="130" x="50" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-45" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-42">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-44" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Verifica la comprobación del nodo anterior si existe o no y prosigue" vertex="1">
+          <mxGeometry height="80" width="150" x="200" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-46" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Opción Inválida&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Le manda un mensaje de error al usuario informando que la opción elegida no existe&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="150" x="210" y="1100" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-53" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-49" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Enviar Mensaje - Pedir Fecha&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;envía un mensaje al estudiante pidiéndole que seleccione o escriba la &lt;strong data-start=&quot;715&quot; data-end=&quot;724&quot;&gt;fecha&lt;/strong&gt; en la que desea recibir la tutoría.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100.5" width="190" x="-130" y="1090" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-52" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Actualizar Sesión - Esperando Fecha&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Después de enviar el mensaje, este nodo actualiza la hoja &lt;b&gt;sesiones&lt;/b&gt;&amp;nbsp;para indicar que el sistema &lt;strong data-start=&quot;2080&quot; data-end=&quot;2114&quot;&gt;ahora está esperando una fecha&lt;/strong&gt;.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="210" x="-140" y="1230" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-59" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-58">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-60" connectable="0" parent="ZpKrJXhJShN57m73RQe9-59" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="False" vertex="1">
+          <mxGeometry relative="1" x="-0.1424" y="-4" as="geometry">
+            <mxPoint x="1" y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-64" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="ZpKrJXhJShN57m73RQe9-63" value="True">
+          <mxGeometry relative="1" x="-0.4478" y="-10" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-56" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Fecha Válida" vertex="1">
+          <mxGeometry height="80" width="110" x="-500" y="970.1199999999999" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-58" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Enviar Mensaje - Fecha Inválida&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Envía un mensaje indicando que la fecha ingresada no cumple el formato esperado&lt;/div&gt;" vertex="1">
+          <mxGeometry height="109.94" width="170" x="-330" y="1060.06" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-62" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-56">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-230" y="940" />
+              <mxPoint x="-417" y="940" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-61" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Toma el resultado del nodo anterior y valida el resultado&amp;nbsp;" vertex="1">
+          <mxGeometry height="80" width="140" x="-300" y="840" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-67" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-63" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-66">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-63" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Leer Tutores Por Materia&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Consulta la hoja donde están registrados los tutores y obtiene únicamente aquellos que enseñan la materia seleccionada por el estudiante.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="180" x="-660" y="1060.06" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-69" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-66" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-68">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-66" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Leer Disponibilidad&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Lee la hoja donde están registrados los horarios disponibles de los tutores.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="180" x="-660" y="1220" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-71" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-68" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-70">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-68" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Buscar Tutor Disponible&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Este nodo combina la información obtenida por los dos nodos anteriores y con esta informacion busca un tutor de esa materia y con esa fecha disponible y devuelve los que cumplen con eso&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="230" x="-685" y="1340" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-75" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-70" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-74">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-76" connectable="0" parent="ZpKrJXhJShN57m73RQe9-75" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="False" vertex="1">
+          <mxGeometry relative="1" x="-0.3316" y="1" as="geometry">
+            <mxPoint x="1" y="21" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-78" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-70" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="ZpKrJXhJShN57m73RQe9-77">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-79" connectable="0" parent="ZpKrJXhJShN57m73RQe9-78" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="True" vertex="1">
+          <mxGeometry relative="1" x="-0.2909" as="geometry">
+            <mxPoint x="11" y="20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-70" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Hay Tutores Disponibles" vertex="1">
+          <mxGeometry height="80" width="130" x="-635" y="1530" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-73" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-72" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="ZpKrJXhJShN57m73RQe9-70">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-329" y="1530" />
+              <mxPoint x="-537" y="1530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-72" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Recibe la lista generada por &lt;span data-start=&quot;6364&quot; data-end=&quot;6391&quot;&gt;Buscar Tutor Disponible&lt;/span&gt; y verifica si contiene al menos un tutor" vertex="1">
+          <mxGeometry height="90" width="164" x="-414" y="1420" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-85" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-74" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ZpKrJXhJShN57m73RQe9-84" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-74" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Enviar Mensaje - Sin Disponibilidad&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Este nodo informa al estudiante que no fue posible encontrar un tutor disponible para la materia y la fecha seleccionadas&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="210" x="-460" y="1640" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-81" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ZpKrJXhJShN57m73RQe9-80" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-77" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Consolidar Mensaje - Tutores Disponibles&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Este nodo recibe la lista de tutores disponibles encontrada en el nodo &lt;strong data-start=&quot;805&quot; data-end=&quot;832&quot;&gt;Buscar Tutor Disponible&lt;/strong&gt; y construye un mensaje organizado para enviárselo al estudiante&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="220" x="-855" y="1615" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-83" edge="1" parent="1" source="ZpKrJXhJShN57m73RQe9-80" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ZpKrJXhJShN57m73RQe9-82" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-80" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="&lt;b&gt;Enviar Mensaje - Tutores Disponibles&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;p data-start=&quot;1998&quot; data-end=&quot;2059&quot; class=&quot;PDq2pG_selectionAnchorContainer&quot;&gt;Envía al estudiante el mensaje generado por el nodo anterior.&lt;/p&gt;&lt;p data-start=&quot;2061&quot; data-end=&quot;2173&quot;&gt;En ese mensaje aparecen los tutores disponibles junto con sus horarios para que el estudiante pueda escoger uno&lt;/p&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150" width="230" x="-860" y="1780" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-82" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="&lt;br&gt;&lt;b&gt;Actualizar Sesión - Esperando Confirmación&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Después de mostrar los tutores disponibles, el sistema actualiza la hoja &lt;b&gt;sesiones&lt;/b&gt;&amp;nbsp;indicando que ahora está esperando la respuesta del estudiante&lt;br&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="230" x="-860" y="1960" as="geometry" />
+        </mxCell>
+        <mxCell id="ZpKrJXhJShN57m73RQe9-84" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="Limpiar Sesión - Sin Disponibilidad&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;deja la conversación preparada para que, si el estudiante desea volver a intentarlo, pueda iniciar una nueva solicitud desde el principio.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="109" width="210" x="-460" y="1800" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-6" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="bDbjJUy5CF4Ujhr01NYg-3" value="2">
+          <mxGeometry relative="1" x="-0.2059" y="-20" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-7" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="bDbjJUy5CF4Ujhr01NYg-4" value="1">
+          <mxGeometry relative="1" x="-0.1111" y="15" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-8" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="bDbjJUy5CF4Ujhr01NYg-5" value="0">
+          <mxGeometry relative="1" x="-0.4146" y="20" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-1" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Switch Confirmación" vertex="1">
+          <mxGeometry height="80" width="140" x="-1175" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Enviar Mensaje - Respuesta Inválida&lt;/b&gt;&lt;div&gt;&lt;p data-start=&quot;3135&quot; data-end=&quot;3233&quot; class=&quot;PDq2pG_selectionAnchorContainer&quot;&gt;Este nodo informa al estudiante que la respuesta enviada no puede ser interpretada por el sistema.&lt;/p&gt;&lt;p data-start=&quot;3235&quot; data-end=&quot;3339&quot;&gt;Su objetivo es indicar que la opción ingresada no corresponde a ninguna de las alternativas disponibles&lt;/p&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="180" width="220" x="-940" y="1025.03" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-34" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="bDbjJUy5CF4Ujhr01NYg-33" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Cancelación&lt;/b&gt;&lt;div&gt;&lt;p data-start=&quot;529&quot; data-end=&quot;621&quot; class=&quot;PDq2pG_selectionAnchorContainer&quot;&gt;Este nodo informa al estudiante que la solicitud de tutoría ha sido cancelada correctamente.&lt;/p&gt;&lt;p data-start=&quot;623&quot; data-end=&quot;729&quot;&gt;Su función es cerrar la conversación de forma clara para que el usuario sepa que el proceso no continuará&lt;/p&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="150.12" width="217.5" x="-1213.75" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-13" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="bDbjJUy5CF4Ujhr01NYg-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Crear Tutoría&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Este nodo crea oficialmente la tutoría en la hoja correspondiente de Google Sheets&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Con este nodo la tutoría queda registrada en la base de datos&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="200" x="-1470" y="1030.06" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-10" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="bDbjJUy5CF4Ujhr01NYg-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-835" y="880" />
+              <mxPoint x="-1070" y="880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Este nodo toma el resultado del nodo anterior y decide por qué camino debe continuar el flujo" vertex="1">
+          <mxGeometry height="70" width="150" x="-910" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-15" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="bDbjJUy5CF4Ujhr01NYg-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Actualizar Disponibilidad Ocupado&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Una vez creada la tutoría, este nodo cambia el estado del horario del tutor&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="-1460" y="1190.06" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-35" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="bDbjJUy5CF4Ujhr01NYg-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-14" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="&lt;b&gt;Enviar Mensaje - Éxito Estudiante&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Informa al estudiante que la tutoría fue creada correctamente por telegram&lt;/div&gt;" vertex="1">
+          <mxGeometry height="100" width="180" x="-1460" y="1310" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-19" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="bDbjJUy5CF4Ujhr01NYg-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;Extraer Datos Tutor Notificación&lt;/b&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Obtiene la información necesaria para enviar una notificación al tutor&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="180" x="-1460" y="1450" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-25" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="bDbjJUy5CF4Ujhr01NYg-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-30" connectable="0" parent="bDbjJUy5CF4Ujhr01NYg-25" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="False" vertex="1">
+          <mxGeometry relative="1" x="-0.5926" as="geometry">
+            <mxPoint x="15" y="10" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-26" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="bDbjJUy5CF4Ujhr01NYg-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-31" connectable="0" parent="bDbjJUy5CF4Ujhr01NYg-26" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="True" vertex="1">
+          <mxGeometry relative="1" x="-0.4559" y="1" as="geometry">
+            <mxPoint x="5" y="9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-18" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Tutor Tiene Chat ID" vertex="1">
+          <mxGeometry height="80" width="130" x="-1435" y="1570" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-21" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="bDbjJUy5CF4Ujhr01NYg-18">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-1160" y="1580" />
+              <mxPoint x="-1338" y="1580" />
+            </Array>
+            <mxPoint x="-1159.9565217391303" y="1559.9999999999998" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-20" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Comprueba si el tutor tiene registrado un Chat ID de Telegram" vertex="1">
+          <mxGeometry height="60" width="120" x="-1220" y="1470" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-29" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="bDbjJUy5CF4Ujhr01NYg-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-22" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Entonces el sistema puede enviarle el mensaje automáticamente." vertex="1">
+          <mxGeometry height="60" width="120" x="-1570" y="1680" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-28" edge="1" parent="1" source="bDbjJUy5CF4Ujhr01NYg-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="bDbjJUy5CF4Ujhr01NYg-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-23" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Entonces no es posible enviar la notificación" vertex="1">
+          <mxGeometry height="60" width="120" x="-1285" y="1680" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-24" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Limpiar sesión&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;El sistema limpiara esta sesión para iniciar con otra&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="140" x="-1440" y="1810" as="geometry" />
+        </mxCell>
+        <mxCell id="bDbjJUy5CF4Ujhr01NYg-33" parent="1" style="whiteSpace=wrap;html=1;rounded=0;" value="Limpiar Sesión - Cancelación&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Este nodo actualiza la hoja &lt;b&gt;sesiones&lt;/b&gt;&amp;nbsp;para finalizar la conversación del estudiante&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="190" x="-1200" y="1230" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
