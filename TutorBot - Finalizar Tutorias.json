@@ -1,0 +1,257 @@
+{
+  "name": "TutorBot - Finalizar Tutorias",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "574407da-2321-40bd-ac5e-bb350d0dc1eb",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "TUTORIAS",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "7c5fafcc-b3bf-441e-99ae-4ef345f8c8bf",
+      "name": "Leer Todas las Tutorias",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst output = [];\n\nfor (const item of $input.all()) {\n    const data = item.json;\n    if (data.estado === 'Finalizada') continue;\n    if (!data.fecha || !data.hora) continue;\n\n    let hora = String(data.hora).trim();\n    if (hora.length === 4) hora = '0' + hora; // \"8:00\" -> \"08:00\"\n\n    const scheduled = new Date(`${data.fecha}T${hora}:00`);\n    if (isNaN(scheduled.getTime())) continue;\n\n    if (scheduled.getTime() < now.getTime()) {\n          output.push({\n                  json: {\n                            ...data,\n                            estado: 'Finalizada',\n                            fecha_finalizacion: now.toISOString()\n                  }\n          });\n    }\n}\n\nreturn output;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "2661d0c6-df2e-4d20-be11-4a8b6de2d40d",
+      "name": "Detectar Tutorias Vencidas"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "TUTORIAS",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id_tutoria": "={{$json.id_tutoria}}",
+            "id_estudiante": "={{$json.id_estudiante}}",
+            "id_tutor": "={{$json.id_tutor}}",
+            "materia": "={{$json.materia}}",
+            "fecha": "={{$json.fecha}}",
+            "hora": "={{$json.hora}}",
+            "estado": "Finalizada",
+            "fecha_finalizacion": "={{$json.fecha_finalizacion}}"
+          },
+          "matchingColumns": [
+            "id_tutoria"
+          ],
+          "schema": [
+            {
+              "id": "id_tutoria",
+              "displayName": "id_tutoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id_estudiante",
+              "displayName": "id_estudiante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id_tutor",
+              "displayName": "id_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "materia",
+              "displayName": "materia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "hora",
+              "displayName": "hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "fecha_finalizacion",
+              "displayName": "fecha_finalizacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        0
+      ],
+      "id": "59f030b7-99be-4081-8862-5c4b8179884a",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Leer Todas las Tutorias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Todas las Tutorias": {
+      "main": [
+        [
+          {
+            "node": "Detectar Tutorias Vencidas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detectar Tutorias Vencidas": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "17d893c7-aeaf-4e43-9274-84a5fb68a224",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8e194b80c9eacae1dc58d0691cc3fcebe929138b1dff6b0ea00813671b128305"
+  },
+  "nodeGroups": [],
+  "id": "TagDnudA5LZ45K8l",
+  "tags": []
+}

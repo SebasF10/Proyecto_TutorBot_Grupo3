@@ -1,0 +1,2234 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "eb6065c1-6554-4bd9-a72a-4516182d8323",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        512
+      ],
+      "notesInFlow": true,
+      "webhookId": "d481d93e-e797-4d2f-9ac1-66d00136ff70",
+      "credentials": {
+        "telegramApi": {
+          "id": "SDEDEQTMxSAqBltG",
+          "name": "Telegram account"
+        }
+      },
+      "notes": "Disparador: mensajes entrantes desde Telegram."
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = items[0].json;\nlet canal, user_id, texto, nombre;\nif (body.message && body.message.from) {\n  // Telegram\n  canal = 'telegram';\n  user_id = String(body.message.from.id);\n  texto = body.message.text || '';\n  nombre = body.message.from.first_name || '';\n} else if (body.author) {\n  // Discord\n  canal = 'discord';\n  user_id = String(body.author.id);\n  texto = body.content || '';\n  nombre = body.author.username || '';\n} else if (body.entry) {\n  // WhatsApp Cloud API\n  const change = body.entry[0].changes[0].value;\n  const msg = (change.messages || [])[0] || {};\n  canal = 'whatsapp';\n  user_id = msg.from || '';\n  texto = msg.text ? msg.text.body : '';\n  nombre = (change.contacts && change.contacts[0] && change.contacts[0].profile.name) || '';\n} else {\n  canal = 'desconocido'; user_id = ''; texto = ''; nombre = '';\n}\nreturn [{ json: { canal, user_id, texto, nombre } }];"
+      },
+      "id": "95c764ae-96b3-4f96-ba12-7a9ad1d218b2",
+      "name": "Normalizar Mensaje",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        512
+      ],
+      "notesInFlow": true,
+      "notes": "Nodo clave: homogeniza el mensaje venga de donde venga (Telegram, Discord o WhatsApp) en los mismos campos: canal, user_id, texto, nombre. Todo el resto del flujo usa SOLO estos campos, nunca datos específicos de una plataforma."
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "SESIONES"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "telegram_user",
+              "lookupValue": "={{$('Normalizar Mensaje').item.json.user_id}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3a1377bb-808d-479b-9f2a-42a2cd575631",
+      "name": "Buscar Sesión Activa",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -48,
+        512
+      ],
+      "notesInFlow": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Consulta SESIONES filtrando por user_id (columna telegram_user) para saber si el usuario ya está en medio del wizard, sin importar el canal."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.telegram_user ? 1 : 0}}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "id": "6f09d1a2-ce8b-4e63-83e0-217bb6647315",
+      "name": "IF - Existe Sesión",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        176,
+        512
+      ],
+      "notesInFlow": true,
+      "notes": "True: continúa el wizard según pantalla_actual. False: solo se acepta /solicitar."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$('Normalizar Mensaje').item.json.texto}}",
+              "value2": "/solicitar"
+            }
+          ]
+        }
+      },
+      "id": "471227e5-c5db-4051-822b-313436341dfd",
+      "name": "IF - Es Comando Solicitar",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        624,
+        512
+      ],
+      "notesInFlow": true,
+      "notes": "Verifica si el mensaje recibido (de cualquier canal) es el comando /solicitar."
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TZRtlbtTn49ylvh",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "Escribe /solicitar para comenzar a pedir una tutoría."
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "abdd83c6-1208-464a-9d94-6ecec6c98aae",
+      "name": "Enviar Mensaje - Ignorar",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        848,
+        704
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json.pantalla_actual}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "inicio"
+            },
+            {
+              "value2": "esperando_materia",
+              "output": 1
+            },
+            {
+              "value2": "esperando_fecha",
+              "output": 2
+            },
+            {
+              "value2": "esperando_confirmacion",
+              "output": 3
+            }
+          ]
+        },
+        "fallbackOutput": 4
+      },
+      "id": "01e81cf5-08b4-48ea-a197-e19c94c2ae6e",
+      "name": "Switch - Enrutar Según Pantalla",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        400,
+        1056
+      ],
+      "notesInFlow": true,
+      "notes": "Enruta según pantalla_actual guardado en SESIONES."
+    },
+    {
+      "parameters": {
+        "jsCode": "const materias = new Set();\nfor (const item of items) {\n  const lista = (item.json.especialidad_materias || '').split(',').map(m => m.trim()).filter(Boolean);\n  lista.forEach(m => materias.add(m));\n}\nconst arr = [...materias];\nconst mensaje = arr.map((m, i) => `${i + 1}. ${m}`).join('\\n');\nreturn [{ json: { listaMaterias: arr.map((m,i)=>({indice:i+1, materia:m})), mensaje } }];"
+      },
+      "id": "0951e47d-4598-432c-8125-461e57687f8b",
+      "name": "Extraer Materias Únicas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        512
+      ],
+      "notesInFlow": true,
+      "notes": "Deduplica materias de tutores activos y arma el texto numerado del menú."
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TZRtlbtTn49ylvh",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "=Elige una materia respondiendo con el número:\n\n{{$json.mensaje}}"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "56e85578-5bed-49b2-b9a3-325e34af25a1",
+      "name": "Enviar Mensaje - Menú Materias",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        512
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "SESIONES"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "pantalla_actual": "esperando_materia",
+            "paso_actual": 1,
+            "datos_parciales": "={{JSON.stringify($('Extraer Materias Únicas').item.json.listaMaterias)}}"
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "pantalla_actual",
+              "displayName": "pantalla_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "paso_actual",
+              "displayName": "paso_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "datos_parciales",
+              "displayName": "datos_parciales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "10613100-5219-474e-9682-64ba8fbbf2da",
+      "name": "Guardar Sesión - Esperando Materia",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1296,
+        512
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Guarda el nuevo estado del usuario (incluye canal) y la lista de materias mostrada."
+    },
+    {
+      "parameters": {
+        "jsCode": "const sesion = JSON.parse($input.first().json.datos_parciales || '[]');\nconst opcion = parseInt($('Normalizar Mensaje').item.json.texto);\nconst match = sesion.find(m => m.indice === opcion);\nreturn [{ json: { valido: !!match, materiaElegida: match ? match.materia : null } }];"
+      },
+      "id": "4923303f-a6a2-4d62-a0a3-5ce106457620",
+      "name": "Validar Opción Materia",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        896
+      ],
+      "notesInFlow": true,
+      "notes": "Valida que la respuesta sea un número dentro del menú de materias mostrado."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.valido}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "45d7df5c-df88-47c3-bb39-94f856d18270",
+      "name": "IF - Opción Válida",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        848,
+        896
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "Opción no válida. Por favor responde con un número del menú."
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "d3861e58-3917-40c5-8283-99ba197d4a1b",
+      "name": "Enviar Mensaje - Opción Inválida",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        992
+      ],
+      "notesInFlow": true,
+      "notes": "No modifica pantalla_actual: el usuario permanece en esperando_materia y puede reintentar."
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "=Elegiste {{$json.materiaElegida}}. Ingresa la fecha deseada (AAAA-MM-DD):"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "357f62c3-5fb9-4608-b19f-7b8f71bad5b1",
+      "name": "Enviar Mensaje - Pedir Fecha",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "SESIONES"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "pantalla_actual": "esperando_fecha",
+            "paso_actual": 2,
+            "datos_parciales": "={{JSON.stringify({materia: $('Validar Opción Materia').item.json.materiaElegida})}}"
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "pantalla_actual",
+              "displayName": "pantalla_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "paso_actual",
+              "displayName": "paso_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "datos_parciales",
+              "displayName": "datos_parciales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "c664b6ac-f715-4389-8ea6-b46cdae0bc78",
+      "name": "Actualizar Sesión - Esperando Fecha",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1296,
+        800
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const texto = $('Normalizar Mensaje').item.json.texto;\nconst regex = /^\\d{4}-\\d{2}-\\d{2}$/;\nconst formatoOk = regex.test(texto);\nconst fecha = formatoOk ? new Date(texto + 'T00:00:00') : null;\nconst hoy = new Date(); hoy.setHours(0,0,0,0);\nconst esFutura = formatoOk && fecha > hoy;\nconst dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];\nreturn [{ json: { valida: formatoOk && esFutura, fecha: texto, diaSemana: formatoOk ? dias[fecha.getDay()] : null } }];"
+      },
+      "id": "e61a842c-5619-4a3c-a9ba-3680b44d32ff",
+      "name": "Validar Fecha",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        1280
+      ],
+      "notesInFlow": true,
+      "notes": "Valida formato AAAA-MM-DD, que sea futura, y calcula el día de la semana."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.valida}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "09277693-726e-4619-8f12-f4bb7847c933",
+      "name": "IF - Fecha Válida",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        848,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TZRtlbtTn49ylvh",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "Formato incorrecto o fecha pasada. Ingresa una fecha futura en formato AAAA-MM-DD."
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "640fb6b7-897f-4280-840d-bede447b6a3a",
+      "name": "Enviar Mensaje - Fecha Inválida",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        1376
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "TUTORES",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "especialidad_materias",
+              "lookupValue": "={{ JSON.parse($('Buscar Sesión Activa').item.json.datos_parciales).materia }}"
+            },
+            {
+              "lookupColumn": "estado",
+              "lookupValue": "Activo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "44ea1510-1900-4ef0-af10-4a6f245c981a",
+      "name": "Leer Tutores Por Materia",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1072,
+        1184
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Lee tutores activos que ofrecen la materia elegida (filtrar especialidad_materias contiene la materia)."
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "DISPONIBILIDAD"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "estado",
+              "lookupValue": "Libre"
+            },
+            {
+              "lookupColumn": "dia_semana",
+              "lookupValue": "={{$('Validar Fecha').item.json.diaSemana}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0f345f5c-33ed-4977-a940-808467832a03",
+      "name": "Leer Disponibilidad",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1296,
+        1184
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Lee bloques de DISPONIBILIDAD libres para el día calculado."
+    },
+    {
+      "parameters": {
+        "jsCode": "const tutores = $('Leer Tutores Por Materia').all().map(i => i.json);\nconst dispoRaw = $('Leer Disponibilidad').all().map(i => i.json);\nconst vistos = new Set();\nconst dispo = dispoRaw.filter(d => { if (vistos.has(d.id_dispo)) return false; vistos.add(d.id_dispo); return true; });\nconst sesion = $('Buscar Sesión Activa').first().json;\nconst datosParciales = JSON.parse(sesion.datos_parciales || '{}');\nconst materia = datosParciales.materia;\nconst cruce = dispo.filter(d => tutores.some(t => t.id_tutor === d.id_tutor && (t.especialidad_materias||'').includes(materia))).map(d => { const t = tutores.find(t => t.id_tutor === d.id_tutor); return { id_tutor: d.id_tutor, nombre: t.nombre, id_dispo: d.id_dispo, hora_inicio: d.hora_inicio, hora_fin: d.hora_fin, chat_id: t.chat_id || '', canal: t.canal || 'telegram' }; });\nreturn cruce.length ? cruce.map(c => ({ json: c, pairedItem: { item: 0 } })) : [{ json: { sinDisponibilidad: true }, pairedItem: { item: 0 } }];"
+      },
+      "id": "859483e2-16ed-425e-b42a-18936263688b",
+      "name": "Buscar Tutor Disponible",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        1184
+      ],
+      "notesInFlow": true,
+      "notes": "Cruza tutores que dictan la materia con su disponibilidad libre ese día. Incluye chat_id y canal del tutor (agrega estas columnas en TUTORES si quieres notificarle por su canal preferido)."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.id_tutor ? 1 : 0}}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "id": "cdebbb92-24aa-485d-9f5a-0b55aac84625",
+      "name": "IF - Hay Tutores Disponibles",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1744,
+        1184
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "No hay tutores disponibles para esa materia en la fecha indicada. Intenta con otra fecha usando /solicitar."
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "a22dc4e2-6adc-4ed6-b835-a70a8c45d7d5",
+      "name": "Enviar Mensaje - Sin Disponibilidad",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1968,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "SESIONES"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "pantalla_actual": "inicio",
+            "paso_actual": 0
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pantalla_actual",
+              "displayName": "pantalla_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "paso_actual",
+              "displayName": "paso_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "datos_parciales",
+              "displayName": "datos_parciales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "50e090c5-2e55-4c39-b21f-7bab9e3de280",
+      "name": "Limpiar Sesión - Sin Disponibilidad",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2192,
+        1280
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Termina el flujo reseteando la sesión al no encontrar disponibilidad."
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TZRtlbtTn49ylvh",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "=Tutores disponibles:\n{{$json.nombre}} ({{$json.hora_inicio}} - {{$json.hora_fin}})\n\n¿Confirmas esta tutoría? (Sí/No)"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "85a5b58f-6b84-4d36-93e9-00f87fff7d01",
+      "name": "Enviar Mensaje - Tutores Disponibles",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2192,
+        1088
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "SESIONES"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "pantalla_actual": "esperando_confirmacion",
+            "paso_actual": 3,
+            "datos_parciales": "={{JSON.stringify({materia: JSON.parse($('Buscar Sesión Activa').first().json.datos_parciales || '{}').materia, fecha: $('Validar Fecha').item.json.fecha, diaSemana: $('Validar Fecha').item.json.diaSemana, candidatos: $('Buscar Tutor Disponible').all().map(i=>i.json)})}}"
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "pantalla_actual",
+              "displayName": "pantalla_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "paso_actual",
+              "displayName": "paso_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "datos_parciales",
+              "displayName": "datos_parciales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "b99b7f6f-b37b-45a9-8307-029068e7e6e6",
+      "name": "Actualizar Sesión - Esperando Confirmación",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2416,
+        1088
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Guarda los tutores candidatos (incluye chat_id/canal) y los datos elegidos para crear la tutoría al confirmar."
+    },
+    {
+      "parameters": {
+        "jsCode": "const texto = ($('Normalizar Mensaje').item.json.texto || '').trim().toLowerCase();\nconst sesion = $('Buscar Sesión Activa').first().json;\nconst datosParciales = JSON.parse(sesion.datos_parciales || '{}');\nconst candidatos = datosParciales.candidatos || [];\n\nif (['no', 'n', 'cancelar'].includes(texto)) {\n    return [{ json: { respuesta: 'cancelar' } }];\n}\n\nconst numero = parseInt(texto, 10);\nif (!isNaN(numero) && numero >= 1 && numero <= candidatos.length) {\n    const seleccion = candidatos[numero - 1];\n    return [{ json: { respuesta: 'seleccion', seleccion } }];\n}\n\nreturn [{ json: { respuesta: 'invalido' } }];"
+      },
+      "id": "c066ae89-47d8-4769-a032-0a968503d6c7",
+      "name": "Interpretar Respuesta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        1760
+      ],
+      "notesInFlow": true,
+      "notes": "Normaliza la respuesta del usuario a si / no / invalido."
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json.respuesta}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "seleccion"
+            },
+            {
+              "value2": "cancelar",
+              "output": 1
+            }
+          ]
+        },
+        "fallbackOutput": 2
+      },
+      "id": "01ef226c-e188-4bbe-ace3-cc7a96bd9817",
+      "name": "Switch - Confirmación",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        848,
+        1728
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "TUTORIAS"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id_tutoria": "={{$now.toMillis()}}",
+            "id_estudiante": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "id_tutor": "={{$('Interpretar Respuesta').item.json.seleccion.id_tutor}}",
+            "materia": "={{JSON.parse($('Buscar Sesión Activa').item.json.datos_parciales).materia}}",
+            "fecha": "={{JSON.parse($('Buscar Sesión Activa').item.json.datos_parciales).fecha}}",
+            "hora": "={{$('Interpretar Respuesta').item.json.seleccion.hora_inicio}}",
+            "estado": "Asignada"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "id_tutoria",
+              "displayName": "id_tutoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id_estudiante",
+              "displayName": "id_estudiante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id_tutor",
+              "displayName": "id_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "materia",
+              "displayName": "materia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hora",
+              "displayName": "hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "f1171edd-78c5-4b22-9658-4d901a7eb0ae",
+      "name": "Crear Tutoría",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1072,
+        1568
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Crea la fila de la nueva tutoría con estado Asignada."
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "DISPONIBILIDAD"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id_dispo": "={{$('Interpretar Respuesta').item.json.seleccion.id_dispo}}",
+            "estado": "Ocupado",
+            "row_number": 0
+          },
+          "matchingColumns": [
+            "id_dispo"
+          ],
+          "schema": [
+            {
+              "id": "id_dispo",
+              "displayName": "id_dispo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "id_tutor",
+              "displayName": "id_tutor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dia_semana",
+              "displayName": "dia_semana",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "hora_inicio",
+              "displayName": "hora_inicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "hora_fin",
+              "displayName": "hora_fin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "8879d0f4-eebc-4b5b-b642-3b620727f229",
+      "name": "Actualizar Disponibilidad Ocupado",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1296,
+        1568
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Marca el bloque de disponibilidad del tutor elegido como Ocupado."
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TZRtlbtTn49ylvh",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "¡Tu tutoría quedó asignada con éxito!"
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "9ad08277-e447-40f8-aeb7-d0c9bbc13f61",
+      "name": "Enviar Mensaje - Éxito Estudiante",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1520,
+        1568
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const cand = $('Interpretar Respuesta').item.json.seleccion || {};\nconst datos = JSON.parse($('Buscar Sesión Activa').first().json.datos_parciales || '{}');\nconst mensaje = `📚 ¡Tienes una nueva tutoría asignada!\\nMateria: ${datos.materia}\\nFecha: ${datos.fecha}\\nHorario: ${cand.hora_inicio} - ${cand.hora_fin}`;\nreturn [{ json: { canal: cand.canal || 'telegram', destinatario: cand.chat_id || '', mensaje } }];"
+      },
+      "id": "b0dbdfac-8544-41e3-9c2a-34ba50c28351",
+      "name": "Extraer Datos Tutor Notificación",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1744,
+        1568
+      ],
+      "notesInFlow": true,
+      "notes": "Extrae el chat_id y canal del tutor asignado (requiere columnas chat_id y canal en TUTORES) para poder notificarle por su plataforma."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.destinatario}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "1d3942da-b22f-418d-948b-f260d90b17f3",
+      "name": "IF - Tutor Tiene Chat ID",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1968,
+        1568
+      ],
+      "notesInFlow": true,
+      "notes": "Revisa si el tutor tiene un chat_id registrado para notificarle."
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TZRtlbtTn49ylvh",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$json.canal}}",
+            "destinatario": "={{$json.destinatario}}",
+            "texto": "Se te asignó una nueva tutoría. Revisa el sistema para más detalles."
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "destinatario",
+              "displayName": "destinatario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "texto",
+              "displayName": "texto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mensaje",
+              "displayName": "mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "417a8114-e146-4928-b9f7-1f836819624b",
+      "name": "Enviar Mensaje - Notificar Tutor",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        2192,
+        1472
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "SESIONES"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "pantalla_actual": "inicio",
+            "paso_actual": 0
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pantalla_actual",
+              "displayName": "pantalla_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "paso_actual",
+              "displayName": "paso_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "datos_parciales",
+              "displayName": "datos_parciales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "5e5662c1-05f4-4183-acae-8e581df3b67c",
+      "name": "Limpiar Sesión - Éxito",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2416,
+        1568
+      ],
+      "notesInFlow": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Resetea la sesión del usuario al finalizar exitosamente el wizard."
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "Solicitud cancelada."
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "6c2ada38-c044-429f-920d-6facf3a3e6b3",
+      "name": "Enviar Mensaje - Cancelación",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        1760
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "SESIONES"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_user": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "pantalla_actual": "inicio",
+            "paso_actual": 0
+          },
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "schema": [
+            {
+              "id": "telegram_user",
+              "displayName": "telegram_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pantalla_actual",
+              "displayName": "pantalla_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "paso_actual",
+              "displayName": "paso_actual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "datos_parciales",
+              "displayName": "datos_parciales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "5343407f-921d-4bc9-9700-5057bf6bde31",
+      "name": "Limpiar Sesión - Cancelación",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1296,
+        1760
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "Por favor responde Sí o No."
+          },
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "4d4e7e38-355c-4441-a61c-160c572e78d2",
+      "name": "Enviar Mensaje - Respuesta Inválida",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1072,
+        1952
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TZRtlbtTn49ylvh",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TZRtlbtTn49ylvh",
+          "cachedResultName": "TutorBot - Enviar Mensaje"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "canal": "={{$('Normalizar Mensaje').item.json.canal}}",
+            "destinatario": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "texto": "Ocurrió un error. Escribe /solicitar para comenzar de nuevo."
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "canal",
+              "displayName": "canal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "destinatario",
+              "displayName": "destinatario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "texto",
+              "displayName": "texto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "mensaje",
+              "displayName": "mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "1d8571ad-8ca8-4e39-8d72-8af0d6121ea3",
+      "name": "Enviar Mensaje - Error General",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -496,
+        2176
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "ID_DE_TU_SPREADSHEET_TUTORBOT_DB"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "SESIONES"
+        },
+        "columns": {
+          "matchingColumns": [
+            "telegram_user"
+          ],
+          "value": {
+            "telegram_user": "={{$('Normalizar Mensaje').item.json.user_id}}",
+            "pantalla_actual": "inicio",
+            "paso_actual": 0,
+            "datos_parciales": ""
+          }
+        },
+        "options": {}
+      },
+      "id": "ab5044ff-2f79-4b04-833f-93c44aa3f345",
+      "name": "Limpiar Sesión - Error",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -272,
+        2176
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "18ZK5iCHHH_a5GL1rGItTmCQpDNJe07bHdp6sngGR8_8",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "TUTORES",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "estado",
+              "lookupValue": "Activo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        1472
+      ],
+      "id": "a3317586-74f0-4d27-a711-7d45e279c8e9",
+      "name": "Leer Tutores Activos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1JJdnrhPgpgSwnPG",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const candidatos = $input.all().map(i => i.json);\nconst estudiante = $('Normalizar Mensaje').item.json;\n\nconst lineas = candidatos.map((c, idx) => `${idx + 1}. ${c.nombre} (${c.hora_inicio}-${c.hora_fin})`);\nconst texto = `Estos son los tutores disponibles:\\n${lineas.join('\\n')}\\n\\nResponde con el número de la opción que prefieras (o escribe 'cancelar' para cancelar).`;\n\nreturn [{ json: { canal: estudiante.canal, destinatario: estudiante.user_id, mensaje: texto, candidatos } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        1088
+      ],
+      "id": "4d36330b-5180-43eb-9441-6bd029ef13cc",
+      "name": "Consolidar Mensaje - Tutores Disponibles"
+    }
+  ],
+  "pinData": {
+    "Normalizar Mensaje": [
+      {
+        "json": {
+          "canal": "telegram",
+          "user_id": "1660706531",
+          "texto": "1",
+          "nombre": "Nicolas"
+        }
+      }
+    ],
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 568509460,
+          "message": {
+            "message_id": 21,
+            "from": {
+              "id": 1660706531,
+              "is_bot": false,
+              "first_name": "Nicolas",
+              "last_name": "Naranjo",
+              "language_code": "es"
+            },
+            "chat": {
+              "id": 1660706531,
+              "first_name": "Nicolas",
+              "last_name": "Naranjo",
+              "type": "private"
+            },
+            "date": 1783714388,
+            "text": "1"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalizar Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar Mensaje": {
+      "main": [
+        [
+          {
+            "node": "Buscar Sesión Activa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Sesión Activa": {
+      "main": [
+        [
+          {
+            "node": "IF - Existe Sesión",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Existe Sesión": {
+      "main": [
+        [
+          {
+            "node": "Switch - Enrutar Según Pantalla",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IF - Es Comando Solicitar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Es Comando Solicitar": {
+      "main": [
+        [
+          {
+            "node": "Extraer Materias Únicas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Mensaje - Ignorar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch - Enrutar Según Pantalla": {
+      "main": [
+        [
+          {
+            "node": "Leer Tutores Activos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validar Opción Materia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validar Fecha",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Interpretar Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Materias Únicas": {
+      "main": [
+        [
+          {
+            "node": "Enviar Mensaje - Menú Materias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Mensaje - Menú Materias": {
+      "main": [
+        [
+          {
+            "node": "Guardar Sesión - Esperando Materia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Opción Materia": {
+      "main": [
+        [
+          {
+            "node": "IF - Opción Válida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Opción Válida": {
+      "main": [
+        [
+          {
+            "node": "Enviar Mensaje - Pedir Fecha",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Mensaje - Opción Inválida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Mensaje - Pedir Fecha": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Sesión - Esperando Fecha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Fecha": {
+      "main": [
+        [
+          {
+            "node": "IF - Fecha Válida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Fecha Válida": {
+      "main": [
+        [
+          {
+            "node": "Leer Tutores Por Materia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Mensaje - Fecha Inválida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Tutores Por Materia": {
+      "main": [
+        [
+          {
+            "node": "Leer Disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Disponibilidad": {
+      "main": [
+        [
+          {
+            "node": "Buscar Tutor Disponible",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Tutor Disponible": {
+      "main": [
+        [
+          {
+            "node": "IF - Hay Tutores Disponibles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Hay Tutores Disponibles": {
+      "main": [
+        [
+          {
+            "node": "Consolidar Mensaje - Tutores Disponibles",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Mensaje - Sin Disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Mensaje - Tutores Disponibles": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Sesión - Esperando Confirmación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Mensaje - Sin Disponibilidad": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Sesión - Sin Disponibilidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Interpretar Respuesta": {
+      "main": [
+        [
+          {
+            "node": "Switch - Confirmación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch - Confirmación": {
+      "main": [
+        [
+          {
+            "node": "Crear Tutoría",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Mensaje - Cancelación",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar Mensaje - Respuesta Inválida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Tutoría": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Disponibilidad Ocupado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Disponibilidad Ocupado": {
+      "main": [
+        [
+          {
+            "node": "Enviar Mensaje - Éxito Estudiante",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Mensaje - Éxito Estudiante": {
+      "main": [
+        [
+          {
+            "node": "Extraer Datos Tutor Notificación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Datos Tutor Notificación": {
+      "main": [
+        [
+          {
+            "node": "IF - Tutor Tiene Chat ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Tutor Tiene Chat ID": {
+      "main": [
+        [
+          {
+            "node": "Enviar Mensaje - Notificar Tutor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Limpiar Sesión - Éxito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Mensaje - Notificar Tutor": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Sesión - Éxito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Mensaje - Cancelación": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Sesión - Cancelación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Mensaje - Error General": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Sesión - Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Tutores Activos": {
+      "main": [
+        [
+          {
+            "node": "Extraer Materias Únicas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consolidar Mensaje - Tutores Disponibles": {
+      "main": [
+        [
+          {
+            "node": "Enviar Mensaje - Tutores Disponibles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "2585d3fb-acc5-4d3e-86c7-cc1cfc16eb2c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8e194b80c9eacae1dc58d0691cc3fcebe929138b1dff6b0ea00813671b128305"
+  },
+  "nodeGroups": [],
+  "id": "wOEJZjVGbbedhBNE",
+  "tags": []
+}

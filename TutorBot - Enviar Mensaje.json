@@ -1,0 +1,131 @@
+{
+  "name": "TutorBot - Enviar Mensaje",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "canal"
+            },
+            {
+              "name": "destinatario"
+            },
+            {
+              "name": "texto"
+            },
+            {
+              "name": "mensaje"
+            }
+          ]
+        }
+      },
+      "id": "bada9e4f-39ac-4f99-88b1-1c8d38f4feb2",
+      "name": "Cuando se Llama el Sub-flujo",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1232,
+        -464
+      ],
+      "notesInFlow": true,
+      "notes": "Recibe canal, destinatario y texto desde el flujo principal TutorBot cada vez que hay que enviar un mensaje."
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json.canal}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "telegram"
+            },
+            {
+              "value2": "discord"
+            },
+            {
+              "value2": "whatsapp"
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "id": "d15cbb7d-56bb-464a-a0f6-4983e5b38074",
+      "name": "Switch - Por Canal",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        -944,
+        -464
+      ],
+      "notesInFlow": true,
+      "notes": "Despacha el envío según el campo canal recibido: telegram, discord o whatsapp."
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json.destinatario}}",
+        "text": "={{$json.mensaje || $json.texto}}",
+        "additionalFields": {}
+      },
+      "id": "ad168a54-d546-4180-85cd-9c9939aa7605",
+      "name": "Enviar por Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        -480
+      ],
+      "notesInFlow": true,
+      "webhookId": "3f45fad0-20f3-4656-bd98-7a8bb0d51e17",
+      "credentials": {
+        "telegramApi": {
+          "id": "SDEDEQTMxSAqBltG",
+          "name": "Telegram account"
+        }
+      },
+      "notes": "Envía el mensaje usando el bot de Telegram. Requiere credencial de Telegram configurada por el usuario."
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Cuando se Llama el Sub-flujo": {
+      "main": [
+        [
+          {
+            "node": "Switch - Por Canal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch - Por Canal": {
+      "main": [
+        [
+          {
+            "node": "Enviar por Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [],
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "6338138f-0f4b-4183-85f8-32035c74025d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8e194b80c9eacae1dc58d0691cc3fcebe929138b1dff6b0ea00813671b128305"
+  },
+  "nodeGroups": [],
+  "id": "3TZRtlbtTn49ylvh",
+  "tags": []
+}
